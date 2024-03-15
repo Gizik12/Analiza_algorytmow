@@ -2,6 +2,7 @@
 #define _movieChest_H_
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 
@@ -22,7 +23,7 @@ class Movie
 
 class MovieChest
 {
-    //tablica obiektów Movie
+    // Tablica obiektów Movie
     vector <Movie*> tab;
     int size;
     int capacity;
@@ -35,5 +36,7 @@ class MovieChest
     void setCapacity(int v);
     void loadData(int amount_of_data);
     void addMovie(Movie* movie);
+    void showMovie();
+    Movie* getMovie(int index);
 };
 #endif

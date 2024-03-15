@@ -52,7 +52,7 @@ MovieChest::MovieChest(int cap)
     this->size = 0;
     this->capacity = cap;
 }
-void MovieChest::addMovie(Movie* movie) //funkcja dodająca filmy do tablicy
+void MovieChest::addMovie(Movie* movie) // Funkcja dodająca filmy do tablicy
 {
     if(size < capacity)
     {
@@ -66,36 +66,35 @@ void MovieChest::addMovie(Movie* movie) //funkcja dodająca filmy do tablicy
 }
 void MovieChest::loadData(int amount_of_data)
 {
+    setCapacity(amount_of_data);
     int number = 0;
     string title = "";
     float rating = 0.0f;
     ifstream file("data.txt");
-    if(file.is_open())
+    if (file.is_open())
     {
         string line;
-        cout << "Poprawnie otworzony plik"<<endl;
-        for(int i = 0; i < amount_of_data && getline(file, line); i++)
+        cout << "Poprawnie otworzony plik" << endl;
+        for (int i = 0; i < this->capacity && getline(file, line); i++)
         {
             istringstream iss(line);
             string token;
 
-            // Wczytujemy numer, tytuł i ocenę filmu z linii
             if (getline(iss, token, ','))
             {
-                number = stoi(token); // Konwersja ciągu znaków na liczbę
+                number = stoi(token);
             }
             if (getline(iss, token, ','))
             {
-                // Sprawdzamy, czy token zaczyna się od cudzysłowia
                 if (token.front() == '"')
                 {
-                    title = token.substr(1); // Usuwamy cudzysłowia z początku
+                    title = token.substr(1);
                     while (getline(iss, token, ','))
                     {
-                        title += "," + token; // Dodajemy kolejne tokeny do tytułu filmu
-                        if (token.back() == '"') // Jeśli ostatni token kończy się cudzysłowiem, kończymy wczytywanie tytułu
+                        title += "," + token;
+                        if (token.back() == '"')
                         {
-                            title.pop_back(); // Usuwamy cudzysłowia z końca
+                            title.pop_back();
                             break;
                         }
                     }
@@ -107,23 +106,41 @@ void MovieChest::loadData(int amount_of_data)
             }
             if (getline(iss, token, ','))
             {
-                rating = stof(token); // Konwersja ciągu znaków na float
+                rating = stof(token);
             }
             else
             {
                 rating = 0.0f;
             }
 
-            Movie m;
-            m.setNumber(number);
-            m.setTitle(title);
-            m.setRating(rating);
+            Movie* m = new Movie(); // Alokacja dynamiczna obiektu Movie
+            m->setNumber(number);
+            m->setTitle(title);
+            m->setRating(rating);
 
-            if(m.getRating() != 0.0f) //Sprawdzanie czy isnije ocena filmu, jeśli nie pomijamy
+            if (m->getRating() != 0.0f)
             {
-                addMovie(&m);
+                addMovie(m);
             }
         }
     }
     file.close();
+}
+void MovieChest::showMovie()
+{
+    for(int i = 0; i < this->size; i++)
+    {
+        cout << tab[i]->getNumber() << " " << tab[i]->getTitle() << " " << tab[i]->getRating() << endl;
+    }
+}
+Movie* MovieChest::getMovie(int index) // Funckja zwraca pojedynczy obiekt o danym indeksie
+{
+    if (index >= 0 && index < size)
+    {
+        return tab[index];
+    }
+    else
+    {
+        return nullptr; // Zwracamy nullptr, jeśli indeks jest nieprawidłowy
+    }
 }

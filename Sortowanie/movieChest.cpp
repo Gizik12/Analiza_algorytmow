@@ -26,7 +26,7 @@ void Movie::setRating(float v)
 {
     this->rating = v;
 }
-float Movie::getRating()
+float Movie::getRating() const 
 {
     return this->rating;
 }
@@ -47,11 +47,6 @@ int MovieChest::getCapacity()
 {
     return this->capacity;
 }
-MovieChest::MovieChest(int cap)
-{
-    this->size = 0;
-    this->capacity = cap;
-}
 void MovieChest::addMovie(Movie* movie) // Funkcja dodająca filmy do tablicy
 {
     if(size < capacity)
@@ -66,6 +61,7 @@ void MovieChest::addMovie(Movie* movie) // Funkcja dodająca filmy do tablicy
 }
 void MovieChest::loadData(int amount_of_data)
 {
+    clear();
     setCapacity(amount_of_data);
     int number = 0;
     string title = "";
@@ -74,7 +70,7 @@ void MovieChest::loadData(int amount_of_data)
     if (file.is_open())
     {
         string line;
-        cout << "Poprawnie otworzony plik" << endl;
+        //cout << "Poprawnie otworzony plik" << endl;
         for (int i = 0; i < this->capacity && getline(file, line); i++)
         {
             istringstream iss(line);
@@ -122,16 +118,29 @@ void MovieChest::loadData(int amount_of_data)
             {
                 addMovie(m);
             }
+            else
+            {
+                delete m;
+            }
         }
     }
     file.close();
 }
+void MovieChest::clear() {
+    for (size_t i = 0; i < size; ++i) {
+        delete tab[i];
+    }
+    tab.clear(); // Usuń wszystkie wskaźniki i opróżnij wektor
+    size = 0;    // Zresetuj rozmiar do zera
+}
+
 void MovieChest::showMovie()
 {
     for(int i = 0; i < this->size; i++)
     {
         cout << tab[i]->getNumber() << " " << tab[i]->getTitle() << " " << tab[i]->getRating() << endl;
     }
+    cout << endl;
 }
 Movie* MovieChest::getMovie(int index) // Funckja zwraca pojedynczy obiekt o danym indeksie
 {
@@ -142,5 +151,17 @@ Movie* MovieChest::getMovie(int index) // Funckja zwraca pojedynczy obiekt o dan
     else
     {
         return nullptr; // Zwracamy nullptr, jeśli indeks jest nieprawidłowy
+    }
+}
+void MovieChest::setMovie(int index, Movie* movie) {
+    if (index >= 0 && index < size) {
+        tab[index] = movie;
+    }
+}
+void MovieChest::swapMovies(int index1, int index2) {
+    if (index1 >= 0 && index1 < size && index2 >= 0 && index2 < size) {
+        Movie* temp = tab[index1];
+        tab[index1] = tab[index2];
+        tab[index2] = temp;
     }
 }

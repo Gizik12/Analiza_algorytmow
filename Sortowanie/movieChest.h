@@ -17,7 +17,7 @@ class Movie
     void setNumber(int v);
     string getTitle();
     void setTitle(string n);
-    float getRating();
+    float getRating() const;
     void setRating(float v);
 };
 
@@ -29,14 +29,17 @@ class MovieChest
     int capacity;
 
     public:
-    MovieChest(int cap);
+    MovieChest() : size(0), capacity(0) {}
     int getSize();
     void setSize(int v);
     int getCapacity();
     void setCapacity(int v);
     void loadData(int amount_of_data);
+    void clear();
     void addMovie(Movie* movie);
     void showMovie();
     Movie* getMovie(int index);
+    void setMovie(int index, Movie* movie);
+    void swapMovies(int index1, int index2);
 };
 #endif
